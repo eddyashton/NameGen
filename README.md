@@ -37,5 +37,6 @@ git pull
 Fetch changes from the upstream copy
 
 # To read
-https://en.wikipedia.org/wiki/Markov_chain
-https://en.wikipedia.org/wiki/Hash_function
+- https://en.wikipedia.org/wiki/Markov_chain
+- https://en.wikipedia.org/wiki/Hash_function
+- https://medium.com/gfycat/naming-conventions-97960fc40179
