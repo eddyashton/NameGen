@@ -1,0 +1,13 @@
+import sys
+import random
+
+random.seed(1)
+def shuffle(line):
+    
+    list_shuffle = list(line)
+
+    shuffle_done = (random.shuffle(list_shuffle))
+
+    return ''.join (list_shuffle)
+
+print (shuffle (sys.argv[1]))
