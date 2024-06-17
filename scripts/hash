@@ -1,0 +1,30 @@
+import sys
+import random
+import hashlib
+
+random.seed(1)
+def shuffle(line):
+    
+    list_shuffle = list(line)
+
+    shuffle_done = (random.shuffle(list_shuffle))
+
+    return ''.join (list_shuffle)
+
+def animalnameslist(animalnames):
+
+    with open(animalnames, 'r') as folder:
+     lines = folder.readlines()
+    lines = [lines.strip() for lines in lines]
+    return lines
+# I = shuffle (sys.argv[1])
+def hash(I):
+    h = hashlib.md5(I)
+    n = int.from_bytes(h.digest(), "little")
+    return (n)
+
+# index = n
+
+names = animalnameslist(sys.argv[1])
+print(names[0])
+
