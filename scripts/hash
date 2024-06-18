@@ -3,13 +3,6 @@ import random
 import hashlib
 
 random.seed(1)
-def shuffle(line):
-    
-    list_shuffle = list(line)
-
-    shuffle_done = (random.shuffle(list_shuffle))
-
-    return ''.join (list_shuffle)
 
 def animalnameslist(animalnames):
 
@@ -23,19 +16,28 @@ def adjectiveslist(adjectives):
      linesadjectives = folder.readlines()
     linesadjectives = [lines.strip() for lines in linesadjectives]
     return linesadjectives
-# I = shuffle (sys.argv[1])
+
 def hashanimal(I):
-    h = hashlib.md5(I)
+    h = hashlib.md5(bytes(I, "utf-8"))
     Nanimals = int.from_bytes(h.digest(), "little")
     return (Nanimals)
 
 def hashadjectives(I):
-    h = hashlib.md5("I"+"1")
+    h = hashlib.md5(bytes(I+"1", "utf-8"))
     Nadjectives = int.from_bytes(h.digest(), "little")
     return (Nadjectives)
 
+def finalnames(Nanimalname, Nadjectives, l1, l2):
+    Finalanimal = (l1[Nanimalname % len(l1)])
+    Finaladjective = (l2[Nanimalname % len(l2)])
+    Result = (Finaladjective +" "+ Finalanimal)
+    print (Result)
+
 
 # index = n
-# names = animalnameslist(sys.argv[1])
-# print(names[0])
+names = animalnameslist(sys.argv[1])
+adjectives = adjectiveslist(sys.argv[2])
+Nadjectives = hashadjectives(sys.argv[3])
+Nanimalnames = hashanimal(sys.argv[3])
 
+finalnames(Nanimalnames, Nadjectives, names, adjectives)
