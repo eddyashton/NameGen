@@ -2,12 +2,14 @@ import sys
 import random
 import hashlib
 import argparse 
+
+
 random.seed(1)
 
 parser = argparse.ArgumentParser(description='create a readable name with a key of any characters')
-parser.add_argument('--animalnames',required = True, metavar='', help='path to the first required file, animalnames')
-parser.add_argument('--adjectives',required = True, metavar='', help='path to the second required file, adjectiveslist')
-parser.add_argument('--key_to_transform',required = True, metavar='', help='Key to transform into a name + adjective')
+parser.add_argument('--animalnames',default = "namelist/animalnames", metavar='', help='path to the first required file, animalnames')
+parser.add_argument('--adjectives',default = "namelist/adjectives", metavar='', help='path to the second required file, adjectiveslist')
+parser.add_argument('key_to_transform', metavar='', help='Key to transform into a name + adjective')
 
 def animalnameslist(animalnames):
 
