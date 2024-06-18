@@ -18,6 +18,9 @@
 
 # python namegen.py "abcd"
 # dbac
+# make it so the hash goes 2 times giving different results simply adding a letter or a number
+#at the end, and then connect these two different numbers with animalnames and adjectives to get the 
+#two parts of the word
 
 bob = "Bob"
 print(bob)

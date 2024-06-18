@@ -1,0 +1,6 @@
+
+def finalnames(Nanimalname, Nadjectives, l):
+    Finalanimal = (l[Nanimalname % len(l)])
+    Finaladjective = (l[Nanimalname % len(l)])
+    Result = ('Finaladjective' + 'Finalanimal')
+    print (Result)

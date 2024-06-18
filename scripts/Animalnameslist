@@ -1,0 +1,6 @@
+def animalnameslist(animalnames):
+
+    with open(animalnames, 'r') as folder:
+     linesanimal = folder.readlines()
+    linesanimal = [lines.strip() for lines in linesanimal]
+    return linesanimal
