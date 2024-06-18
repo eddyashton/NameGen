@@ -17,7 +17,7 @@ def animalnameslist(animalnames):
      linesanimal = folder.readlines()
     linesanimal = [lines.strip() for lines in linesanimal]
     return linesanimal
-def animalnameslist(adjectives):
+def adjectiveslist(adjectives):
 
     with open(adjectives, 'r') as folder:
      linesadjectives = folder.readlines()
