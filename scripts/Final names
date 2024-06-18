@@ -1,3 +1,5 @@
+import sys
+
 
 def finalnames(Nanimalname, Nadjectives, l):
     Finalanimal = (l[Nanimalname % len(l)])
