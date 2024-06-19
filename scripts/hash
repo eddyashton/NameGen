@@ -3,7 +3,6 @@ import random
 import hashlib
 import argparse 
 
-
 random.seed(1)
 
 parser = argparse.ArgumentParser(description='create a readable name with a key of any characters')
