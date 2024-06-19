@@ -55,6 +55,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "identifier",
         help="Key to transform into a name + adjective",
+        nargs="+",
     )
     parser.add_argument(
         "--template",
@@ -66,10 +67,11 @@ if __name__ == "__main__":
 
     data = load_data(args.data_dir)
 
-    print(
-        populate_template(
-            args.identifier,
-            args.template,
-            data,
+    for identifier in args.identifier:
+        print(
+            populate_template(
+                identifier,
+                args.template,
+                data,
+            )
         )
-    )
