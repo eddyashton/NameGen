@@ -1,5 +1,6 @@
 import argparse
 import hashlib
+import os
 
 
 def load_from_file(filename):
@@ -32,19 +33,24 @@ def populate_template(identifier, template_s, data):
     return s
 
 
+def load_data(dir):
+    data = {}
+    files = os.listdir(dir)
+    for file in files:
+        path = os.path.join(dir, file)
+        data[f"{{{file}}}"] = load_from_file(path)
+
+    return data
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="create a readable name with a key of any characters"
     )
     parser.add_argument(
-        "--animalnames",
-        default="namelist/animal",
-        help="path to the first required file, animalnames",
-    )
-    parser.add_argument(
-        "--adjectives",
-        default="namelist/adjective",
-        help="path to the second required file, adjectiveslist",
+        "--data-dir",
+        default="namelist",
+        help="Path to directory where namelists are stored",
     )
     parser.add_argument(
         "identifier",
@@ -58,13 +64,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    animal_names = load_from_file(args.animalnames)
-    adjectives = load_from_file(args.adjectives)
-
-    data = {
-        "{animal}": animal_names,
-        "{adjective}": adjectives,
-    }
+    data = load_data(args.data_dir)
 
     print(
         populate_template(
