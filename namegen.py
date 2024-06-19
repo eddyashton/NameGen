@@ -38,12 +38,12 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--animalnames",
-        default="namelist/animalnames",
+        default="namelist/animal",
         help="path to the first required file, animalnames",
     )
     parser.add_argument(
         "--adjectives",
-        default="namelist/adjectives",
+        default="namelist/adjective",
         help="path to the second required file, adjectiveslist",
     )
     parser.add_argument(
