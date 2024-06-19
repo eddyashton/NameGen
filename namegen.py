@@ -15,11 +15,21 @@ def do_hash(I):
     return n
 
 
-def finalnames(Nanimalname, Nadjectives, l1, l2):
-    Finalanimal = l1[Nanimalname % len(l1)]
-    Finaladjective = l2[Nanimalname % len(l2)]
-    Result = Finaladjective + " " + Finalanimal
-    print(Result)
+def lookup(l, n):
+    return l[n % len(l)]
+
+
+def populate_template(identifier, template_s, data):
+    n = 0
+    s = template_s
+    for k, v in data.items():
+        while k in s:
+            n = do_hash(identifier + str(n))
+            choice = lookup(v, n)
+            s = s.replace(k, choice, 1)
+            n += 1
+
+    return s
 
 
 if __name__ == "__main__":
@@ -29,24 +39,37 @@ if __name__ == "__main__":
     parser.add_argument(
         "--animalnames",
         default="namelist/animalnames",
-        metavar="",
         help="path to the first required file, animalnames",
     )
     parser.add_argument(
         "--adjectives",
         default="namelist/adjectives",
-        metavar="",
         help="path to the second required file, adjectiveslist",
     )
     parser.add_argument(
-        "key_to_transform", metavar="", help="Key to transform into a name + adjective"
+        "identifier",
+        help="Key to transform into a name + adjective",
+    )
+    parser.add_argument(
+        "--template",
+        default="{adjective} {animal}",
+        help="Template for name to create",
     )
 
     args = parser.parse_args()
-    # index = n
+
     animal_names = load_from_file(args.animalnames)
     adjectives = load_from_file(args.adjectives)
-    Nadjectives = do_hash(args.key_to_transform)
-    Nanimalnames = do_hash(args.key_to_transform + "1")
 
-    finalnames(Nanimalnames, Nadjectives, animal_names, adjectives)
+    data = {
+        "{animal}": animal_names,
+        "{adjective}": adjectives,
+    }
+
+    print(
+        populate_template(
+            args.identifier,
+            args.template,
+            data,
+        )
+    )
