@@ -48,6 +48,7 @@ def gen_string(letter_counts):
             return s
 
 s = gen_string(letter_counts)
+s = s[0].upper() + s[1:]
 print(s)
 
 
