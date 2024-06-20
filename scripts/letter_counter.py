@@ -26,3 +26,14 @@ def count_letters(strings_list):
 strings_list = animalnameslist(sys.argv[1])
 letter_counts = count_letters(strings_list)
 print(letter_counts)
+
+from collections import Counter
+
+def transform_string_to_pair_counter(pair_string):
+    pairs = [tuple(pair) for pair in pair_string.split()]
+    pair_counter = Counter(pairs)
+    return pair_counter
+
+pair_string = (letter_counts)
+pair_counter = transform_string_to_pair_counter(pair_string)
+print(pair_counter)
