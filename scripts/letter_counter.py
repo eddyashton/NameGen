@@ -15,8 +15,10 @@ def count_letters(strings_list):
     letter_counts = Counter()
 
     for string in strings_list:
-
-        letter_counts.update(string.lower())
+        s = string.lower()
+        for (first, second) in zip(s[:-1], s[1:]):
+            print(first, second)
+            # letter_counts.update({c: 1})
 
     return dict(letter_counts)
 
