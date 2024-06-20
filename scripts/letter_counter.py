@@ -28,13 +28,13 @@ def count_letters(strings_list):
 
 strings_list = animalnameslist(sys.argv[1])
 letter_counts = count_letters(strings_list)
-print(letter_counts)
 
-def weighted_random_choice(choices, weights):
-    return random.choices(choices, weights=weights, k=1)[0]
-choices = ['a', 'b', 'c', 'd']
-weights = [10, 5, 1, 20]
-random_choice = weighted_random_choice(choices, weights)
+
+def weighted_random_choice(probability):
+    keys=list(probability.keys())
+    values=list(probability.values())
+    print(random.choices(keys, weights=values, k=1)[0])
+
 
 
 def gen_string(letter_counts):
@@ -43,19 +43,17 @@ def gen_string(letter_counts):
     probabilities = letter_counts[current]
     choice = weighted_random_choice()
     l += choice
+weighted_random_choice(letter_counts[''])
+weighted_random_choice(letter_counts[''])
+weighted_random_choice(letter_counts[''])
+weighted_random_choice(letter_counts[''])
+weighted_random_choice(letter_counts[''])
 
-choose(letter_counts[''])
-choose(letter_counts[''])
-choose(letter_counts[''])
-choose(letter_counts[''])
-choose(letter_counts[''])
-
-choose(letter_counts['a'])
-choose(letter_counts['a'])
-choose(letter_counts['a'])
-choose(letter_counts['a'])
-choose(letter_counts['a'])
-choose(letter_counts['a'])
+weighted_random_choice(letter_counts['a'])
+weighted_random_choice(letter_counts['a'])
+weighted_random_choice(letter_counts['a'])
+weighted_random_choice(letter_counts['a'])
+weighted_random_choice(letter_counts['a'])
 
 from collections import Counter
 
@@ -65,5 +63,5 @@ def transform_string_to_pair_counter(pair_string):
     return pair_counter
 
 pair_string = (letter_counts)
-pair_counter = transform_string_to_pair_counter(pair_string)
-print(pair_counter)
+#pair_counter = transform_string_to_pair_counter(pair_string)
+#print(pair_counter)
