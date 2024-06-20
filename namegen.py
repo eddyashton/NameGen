@@ -32,7 +32,7 @@ def populate_template(identifier, template_s, data):
 
     return s
 
-
+#possible bug
 def load_data(dir):
     data = {}
     files = os.listdir(dir)

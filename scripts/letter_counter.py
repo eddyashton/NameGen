@@ -37,7 +37,7 @@ def weighted_random_choice(probability):
 
 
 
-def gen_string(letter_counts, seed):
+def gen_string(letter_counts):
     s = ""
     while True:
         c = len(s) > 0 and s[-1] or ""
