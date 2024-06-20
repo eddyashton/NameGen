@@ -33,27 +33,23 @@ letter_counts = count_letters(strings_list)
 def weighted_random_choice(probability):
     keys=list(probability.keys())
     values=list(probability.values())
-    print(random.choices(keys, weights=values, k=1)[0])
+    return random.choices(keys, weights=values, k=1)[0]
 
 
 
-def gen_string(letter_counts):
-    l = ['']
-    current = l[-1]
-    probabilities = letter_counts[current]
-    choice = weighted_random_choice()
-    l += choice
-weighted_random_choice(letter_counts[''])
-weighted_random_choice(letter_counts[''])
-weighted_random_choice(letter_counts[''])
-weighted_random_choice(letter_counts[''])
-weighted_random_choice(letter_counts[''])
+def gen_string(letter_counts, seed):
+    s = ""
+    while True:
+        c = len(s) > 0 and s[-1] or ""
+        probabilities = letter_counts[c]
+        c = weighted_random_choice(probabilities)
+        s += c
+        if c == '':
+            return s
 
-weighted_random_choice(letter_counts['a'])
-weighted_random_choice(letter_counts['a'])
-weighted_random_choice(letter_counts['a'])
-weighted_random_choice(letter_counts['a'])
-weighted_random_choice(letter_counts['a'])
+s = gen_string(letter_counts)
+print(s)
+
 
 from collections import Counter
 
