@@ -11,14 +11,17 @@ def animalnameslist(animalnames):
 
 
 def count_letters(strings_list):
-
-    letter_counts = Counter()
+    letter_counts = {}
 
     for string in strings_list:
-        s = string.lower()
-        for (first, second) in zip(s[:-1], s[1:]):
-            print(first, second)
-            # letter_counts.update({c: 1})
+        s = list(string.lower())
+        for (first, second) in zip([''] + s, s + ['']):
+            if first not in letter_counts:
+                letter_counts[first] = {}
+            first_counts = letter_counts[first]
+            if second not in first_counts:
+                first_counts[second] = 0
+            first_counts[second] += 1
 
     return dict(letter_counts)
 
@@ -27,10 +30,33 @@ strings_list = animalnameslist(sys.argv[1])
 letter_counts = count_letters(strings_list)
 print(letter_counts)
 
+def choose(probabilities):
+    ...
+
+def gen_string(letter_counts):
+    l = ['']
+    current = l[-1]
+    probabilities = letter_counts[current]
+    choice = choose(probabilities)
+    l += choice
+
+choose(letter_counts[''])
+choose(letter_counts[''])
+choose(letter_counts[''])
+choose(letter_counts[''])
+choose(letter_counts[''])
+
+choose(letter_counts['a'])
+choose(letter_counts['a'])
+choose(letter_counts['a'])
+choose(letter_counts['a'])
+choose(letter_counts['a'])
+choose(letter_counts['a'])
+
 from collections import Counter
 
 def transform_string_to_pair_counter(pair_string):
-    pairs = [tuple(pair) for pair in pair_string.split()]
+    pairs = [tuple(pair.split()) for pair in pair_string.items()]
     pair_counter = Counter(pairs)
     return pair_counter
 
