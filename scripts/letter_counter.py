@@ -1,6 +1,6 @@
 import sys
 from collections import Counter
-
+import random
 
 def animalnameslist(animalnames):
 
@@ -30,14 +30,18 @@ strings_list = animalnameslist(sys.argv[1])
 letter_counts = count_letters(strings_list)
 print(letter_counts)
 
-def choose(probabilities):
-    ...
+def weighted_random_choice(choices, weights):
+    return random.choices(choices, weights=weights, k=1)[0]
+choices = ['a', 'b', 'c', 'd']
+weights = [10, 5, 1, 20]
+random_choice = weighted_random_choice(choices, weights)
+
 
 def gen_string(letter_counts):
     l = ['']
     current = l[-1]
     probabilities = letter_counts[current]
-    choice = choose(probabilities)
+    choice = weighted_random_choice()
     l += choice
 
 choose(letter_counts[''])
