@@ -1,0 +1,8 @@
+import sys
+
+def animalnameslist(adjectives):
+
+    with open(adjectives, 'r') as folder:
+     linesadjectives = folder.readlines()
+    linesadjectives = [lines.strip() for lines in linesadjectives]
+    return linesadjectives

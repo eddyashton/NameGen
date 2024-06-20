@@ -1,30 +1,49 @@
 import sys
 import random
 import hashlib
+import argparse 
 
 random.seed(1)
-def shuffle(line):
-    
-    list_shuffle = list(line)
 
-    shuffle_done = (random.shuffle(list_shuffle))
-
-    return ''.join (list_shuffle)
+parser = argparse.ArgumentParser(description='create a readable name with a key of any characters')
+parser.add_argument('--animalnames',default = "namelist/animalnames", metavar='', help='path to the first required file, animalnames')
+parser.add_argument('--adjectives',default = "namelist/adjectives", metavar='', help='path to the second required file, adjectiveslist')
+parser.add_argument('key_to_transform', metavar='', help='Key to transform into a name + adjective')
 
 def animalnameslist(animalnames):
 
     with open(animalnames, 'r') as folder:
-     lines = folder.readlines()
-    lines = [lines.strip() for lines in lines]
-    return lines
-# I = shuffle (sys.argv[1])
-def hash(I):
-    h = hashlib.md5(I)
-    n = int.from_bytes(h.digest(), "little")
-    return (n)
+     linesanimal = folder.readlines()
+    linesanimal = [lines.strip() for lines in linesanimal]
+    return linesanimal
+def adjectiveslist(adjectives):
 
+    with open(adjectives, 'r') as folder:
+     linesadjectives = folder.readlines()
+    linesadjectives = [lines.strip() for lines in linesadjectives]
+    return linesadjectives
+
+def hashanimal(I):
+    h = hashlib.md5(bytes(I, "utf-8"))
+    Nanimals = int.from_bytes(h.digest(), "little")
+    return (Nanimals)
+
+def hashadjectives(I):
+    h = hashlib.md5(bytes(I+"1", "utf-8"))
+    Nadjectives = int.from_bytes(h.digest(), "little")
+    return (Nadjectives)
+
+def finalnames(Nanimalname, Nadjectives, l1, l2):
+    Finalanimal = (l1[Nanimalname % len(l1)])
+    Finaladjective = (l2[Nanimalname % len(l2)])
+    Result = (Finaladjective +" "+ Finalanimal)
+    print (Result)
+
+args = parser.parse_args()
 # index = n
+names = animalnameslist(args.animalnames)
+adjectives = adjectiveslist(args.adjectives)
+Nadjectives = hashadjectives(args.key_to_transform)
+Nanimalnames = hashanimal(args.key_to_transform)
 
-names = animalnameslist(sys.argv[1])
-print(names[0])
-
+finalnames(Nanimalnames, Nadjectives, names, adjectives)
