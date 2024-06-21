@@ -23,20 +23,14 @@ def calculate_probabilities(words, n):
         }
 
     return probabilities
-
-
 def load_words(filename):
     with open(filename, "r") as file:
         words = file.read().splitlines()
     return words
-
-
 def print_probabilities(probabilities, n):
     print(f"Probabilities for {n}-grams:")
     for prefix, suffix_probs in probabilities.items():
         print(f"{prefix}: {suffix_probs}")
-
-
 def main():
     if len(sys.argv) < 2:
         print(f"Usage: python {sys.argv[0]} <filename>")
@@ -50,7 +44,5 @@ def main():
 
     print_probabilities(bigram_probabilities, 2)
     print_probabilities(trigram_probabilities, 3)
-
-
 if __name__ == "__main__":
     main()
