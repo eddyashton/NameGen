@@ -34,12 +34,16 @@ def find_tokens(strings_list, token_splitter):
             local_tokens = dict(Counter(line))
             local_tokens.update(count_ngrams(line, 2))
             local_tokens.update(count_ngrams(line, 3))
+            local_tokens.update(count_ngrams(line, 4))
+            local_tokens.update(count_ngrams(line, 5))
             for k, v in local_tokens.items():
                 if k in token_counts:
                     token_counts[k] += v
                 else:
                     token_counts[k] = v
-    best_tokens = sorted(token_counts.items(), key=lambda p: p[1], reverse=True)[:100]
+    best_tokens = sorted(
+        token_counts.items(), key=lambda p: len(p[0]) == 1 or p[1], reverse=True
+    )[:100]
     return [bt[0] for bt in best_tokens]
 
 
