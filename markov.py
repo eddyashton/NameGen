@@ -15,7 +15,7 @@ def animalnameslist(animalnames):
 
 
 def tokenise(line):
-    return list(line.lower())
+    return [word.lower() for word in line.split()]
 
 
 def count_letters(strings_list):
@@ -42,14 +42,14 @@ def weighted_random_choice(probability):
 
 def gen_string(letter_counts, seed):
     random.seed(seed)
-    s = ""
+    l = []
     while True:
-        c = len(s) > 0 and s[-1] or ""
+        c = len(l) > 0 and l[-1] or ""
         probabilities = letter_counts[c]
         c = weighted_random_choice(probabilities)
-        s += c
+        l += [c]
         if c == "":
-            return s
+            return " ".join(l)
 
 
 if __name__ == "__main__":
