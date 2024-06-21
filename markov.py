@@ -13,17 +13,34 @@ def load_from_file(filename):
     return lines
 
 
-def tokenise(line, token_splitter):
-    if token_splitter is None:
-        return list(line.lower())
-    return [word.lower() for word in line.split(token_splitter)]
+def count_ngrams(s, n):
+    counts = {}
+    for ngram in [s[i : i + n] for i in range(0, len(s) - n + 1)]:
+        if ngram in counts:
+            counts[ngram] += 1
+        else:
+            counts[ngram] = 1
+    return counts
 
 
 def find_tokens(strings_list, token_splitter):
-    tokens = []
+    token_counts = {}
     for line in strings_list:
-        tokens += tokenise(line, token_splitter)
-    return list(set(tokens))
+        line = line.lower()
+        if token_splitter is not None:
+            # TODO
+            tokens += [word.lower() for word in line.split(token_splitter)]
+        else:
+            local_tokens = dict(Counter(line))
+            local_tokens.update(count_ngrams(line, 2))
+            local_tokens.update(count_ngrams(line, 3))
+            for k, v in local_tokens.items():
+                if k in token_counts:
+                    token_counts[k] += v
+                else:
+                    token_counts[k] = v
+    best_tokens = sorted(token_counts.items(), key=lambda p: p[1], reverse=True)[:100]
+    return [bt[0] for bt in best_tokens]
 
 
 def tokenisations(s, tokens):
