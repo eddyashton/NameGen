@@ -45,7 +45,8 @@ def load_data(dir):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="create a readable name with a key of any characters"
+        description="create a readable name with a key of any characters",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
         "--data-dir",
