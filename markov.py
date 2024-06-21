@@ -14,11 +14,15 @@ def animalnameslist(animalnames):
     return linesanimal
 
 
+def tokenise(line):
+    return list(line.lower())
+
+
 def count_letters(strings_list):
     letter_counts = {}
 
     for string in strings_list:
-        s = list(string.lower())
+        s = tokenise(string)
         for first, second in zip([""] + s, s + [""]):
             if first not in letter_counts:
                 letter_counts[first] = {}
@@ -36,7 +40,8 @@ def weighted_random_choice(probability):
     return random.choices(keys, weights=values, k=1)[0]
 
 
-def gen_string(letter_counts):
+def gen_string(letter_counts, seed):
+    random.seed(seed)
     s = ""
     while True:
         c = len(s) > 0 and s[-1] or ""
@@ -56,12 +61,14 @@ if __name__ == "__main__":
         "file",
         help="name of the file you want to use as data",
     )
+    parser.add_argument("seed", nargs="+")
 
     args = parser.parse_args()
 
     strings_list = animalnameslist(args.file)
     letter_counts = count_letters(strings_list)
 
-    s = gen_string(letter_counts)
-    s = s[0].upper() + s[1:]
-    print(s)
+    for seed in args.seed:
+        s = gen_string(letter_counts, seed)
+        s = s[0].upper() + s[1:]
+        print(s)
