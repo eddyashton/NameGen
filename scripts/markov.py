@@ -1,9 +1,10 @@
-!/usr/bin/env python3
+#!/usr/bin/env python3
 
 import sys
 from collections import Counter
 import random
-import argparse 
+import argparse
+
 
 def animalnameslist(animalnames):
 
@@ -18,7 +19,7 @@ def count_letters(strings_list):
 
     for string in strings_list:
         s = list(string.lower())
-        for (first, second) in zip([''] + s, s + ['']):
+        for first, second in zip([""] + s, s + [""]):
             if first not in letter_counts:
                 letter_counts[first] = {}
             first_counts = letter_counts[first]
@@ -29,15 +30,10 @@ def count_letters(strings_list):
     return dict(letter_counts)
 
 
-strings_list = animalnameslist(sys.argv[1])
-letter_counts = count_letters(strings_list)
-
-
 def weighted_random_choice(probability):
-    keys=list(probability.keys())
-    values=list(probability.values())
+    keys = list(probability.keys())
+    values = list(probability.values())
     return random.choices(keys, weights=values, k=1)[0]
-
 
 
 def gen_string(letter_counts):
@@ -47,25 +43,25 @@ def gen_string(letter_counts):
         probabilities = letter_counts[c]
         c = weighted_random_choice(probabilities)
         s += c
-        if c == '':
+        if c == "":
             return s
 
-s = gen_string(letter_counts)
-s = s[0].upper() + s[1:]
-print(s)
 
+if __name__ == "__main__":
 
-from collections import Counter
+    parser = argparse.ArgumentParser(
+        description="create a readable name using a marok chain"
+    )
+    parser.add_argument(
+        "file",
+        help="name of the file you want to use as data",
+    )
 
-def transform_string_to_pair_counter(pair_string):
-    pairs = [tuple(pair.split()) for pair in pair_string.items()]
-    pair_counter = Counter(pairs)
-    return pair_counter
+    args = parser.parse_args()
 
-pair_string = (letter_counts)
-#pair_counter = transform_string_to_pair_counter(pair_string)
-#print(pair_counter)
+    strings_list = animalnameslist(args.file)
+    letter_counts = count_letters(strings_list)
 
-parser = argparse.ArgumentParser(description='create a readable name using a marok chain')
-parser.add_argument('datafile name',base = "namelist/",  metavar='', help='name of the file you want to use as data')
-
+    s = gen_string(letter_counts)
+    s = s[0].upper() + s[1:]
+    print(s)
