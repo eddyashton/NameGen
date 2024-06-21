@@ -19,20 +19,41 @@ def tokenise(line, token_splitter):
     return [word.lower() for word in line.split(token_splitter)]
 
 
-def count_letters(strings_list, token_splitter):
-    letter_counts = {}
+def find_tokens(strings_list, token_splitter):
+    tokens = []
+    for line in strings_list:
+        tokens += tokenise(line, token_splitter)
+    return list(set(tokens))
+
+
+def tokenisations(s, tokens):
+    l = []
+    for t in tokens:
+        if s.startswith(t):
+            remainder = s[len(t) :]
+            rest = tokenisations(remainder, tokens)
+            if len(rest) == 0:
+                l += [[t]]
+            else:
+                l += [[t, *r] for r in rest]
+    return l
+
+
+def count_tokens(strings_list, tokens):
+    token_probabilities = {}
 
     for string in strings_list:
-        s = tokenise(string, token_splitter)
-        for first, second in zip([""] + s, s + [""]):
-            if first not in letter_counts:
-                letter_counts[first] = {}
-            first_counts = letter_counts[first]
-            if second not in first_counts:
-                first_counts[second] = 0
-            first_counts[second] += 1
+        seqs = tokenisations(string.lower(), tokens)
+        for seq in seqs:
+            for first, second in zip([""] + seq, seq + [""]):
+                if first not in token_probabilities:
+                    token_probabilities[first] = {}
+                first_counts = token_probabilities[first]
+                if second not in first_counts:
+                    first_counts[second] = 0
+                first_counts[second] += 1
 
-    return dict(letter_counts)
+    return token_probabilities
 
 
 def weighted_random_choice(probability):
@@ -41,12 +62,12 @@ def weighted_random_choice(probability):
     return random.choices(keys, weights=values, k=1)[0]
 
 
-def gen_string(letter_counts, seed, token_splitter):
+def gen_string(all_probabilities, seed, token_splitter):
     random.seed(seed)
     l = []
     while True:
         c = len(l) > 0 and l[-1] or ""
-        probabilities = letter_counts[c]
+        probabilities = all_probabilities[c]
         c = weighted_random_choice(probabilities)
         l += [c]
         if c == "":
@@ -68,9 +89,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     strings_list = load_from_file(args.file)
-    letter_counts = count_letters(strings_list, args.token_splitter)
+    tokens = find_tokens(strings_list, args.token_splitter)
+    token_probabilities = count_tokens(strings_list, tokens)
 
     for seed in args.seed:
-        s = gen_string(letter_counts, seed, args.token_splitter)
+        s = gen_string(token_probabilities, seed, args.token_splitter)
         s = s[0].upper() + s[1:]
         print(s)
