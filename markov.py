@@ -6,12 +6,11 @@ import random
 import argparse
 
 
-def animalnameslist(animalnames):
-
-    with open(animalnames, "r") as folder:
-        linesanimal = folder.readlines()
-    linesanimal = [lines.strip() for lines in linesanimal]
-    return linesanimal
+def load_from_file(filename):
+    with open(filename, "r") as folder:
+        lines = folder.readlines()
+    lines = [line.strip() for line in lines]
+    return lines
 
 
 def tokenise(line, token_splitter):
@@ -68,7 +67,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    strings_list = animalnameslist(args.file)
+    strings_list = load_from_file(args.file)
     letter_counts = count_letters(strings_list, args.token_splitter)
 
     for seed in args.seed:
