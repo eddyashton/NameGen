@@ -1,8 +1,9 @@
-#!/usr/bin/env python3
+!/usr/bin/env python3
 
 import sys
 from collections import Counter
 import random
+import argparse 
 
 def animalnameslist(animalnames):
 
@@ -64,3 +65,7 @@ def transform_string_to_pair_counter(pair_string):
 pair_string = (letter_counts)
 #pair_counter = transform_string_to_pair_counter(pair_string)
 #print(pair_counter)
+
+parser = argparse.ArgumentParser(description='create a readable name using a marok chain')
+parser.add_argument('datafile name',base = "namelist/",  metavar='', help='name of the file you want to use as data')
+
