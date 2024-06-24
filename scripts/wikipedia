@@ -1,0 +1,38 @@
+import requests
+from bs4 import BeautifulSoup
+import re
+
+def extract_names_from_wikipedia(url):
+    
+    response = requests.get(url)
+    
+  
+    if response.status_code != 200:
+        print(f"Failed to retrieve the page. Status code: {response.status_code}")
+        return []
+
+   
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+   
+    text_elements = soup.find_all(['p', 'li'])
+
+    
+    names = []
+
+    
+    name_pattern = re.compile(r'\b[A-Z][a-z]*\b')
+
+    for element in text_elements:
+        text = element.get_text()
+        matches = name_pattern.findall(text)
+        for match in matches:
+            if match not in names:
+                names.append(match)
+    
+    return names
+
+if __name__ == "__main__":
+    url = "https://en.wikipedia.org/wiki/List_of_most_popular_given_names"
+    names = extract_names_from_wikipedia(url)
+    print(names)
