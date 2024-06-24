@@ -32,6 +32,7 @@ def find_tokens(strings_list, token_splitter):
             local_tokens.update(
                 dict(Counter([word.lower() for word in line.split(token_splitter)]))
             )
+            # TODO: count_ngrams for word-based splitting?
         else:
             local_tokens.update(dict(Counter(line)))
             local_tokens.update(count_ngrams(line, 2))
@@ -46,10 +47,12 @@ def find_tokens(strings_list, token_splitter):
     best_tokens = sorted(
         token_counts.items(), key=lambda p: len(p[0]) == 1 or p[1], reverse=True
     )[:100]
+    # TODO: Configure number of tokens kept, for differently sized data sets?
     return [bt[0] for bt in best_tokens]
 
 
 def tokenisations(s, tokens):
+    # TODO: More efficient tokenisation process?
     l = []
     for t in tokens:
         if s.startswith(t):
@@ -108,11 +111,13 @@ if __name__ == "__main__":
     )
     parser.add_argument("seed", nargs="+")
     parser.add_argument("--token-splitter", default=None)
+    # TODO: 2 token splitter modes (char vs word), rather than arbitrary character?
 
     args = parser.parse_args()
 
     strings_list = load_from_file(args.file)
     tokens = find_tokens(strings_list, args.token_splitter)
+    # TODO: Remove empty string, to avoid infinite loops in tokeniser?
     token_probabilities = count_tokens(strings_list, tokens)
 
     for seed in args.seed:
