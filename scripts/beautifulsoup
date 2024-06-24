@@ -1,0 +1,53 @@
+import httpx
+from bs4 import BeautifulSoup
+import requests
+import re
+
+#wikipedia page url to type here :
+url = "https://en.wikipedia.org/wiki/List_of_most_popular_given_names"
+
+response = requests.get(url)
+
+
+if response.status_code == 200:
+    soup = BeautifulSoup(response.content, 'html.parser')
+    names = []
+    tables = soup.find_all('table', {'class': 'wikitable'})
+
+    for table in tables:
+        
+        rows = table.find_all('tr')
+        for row in rows:
+            cells = row.find_all(['th', 'td'])
+            for cell in cells:
+                text = cell.get_text(strip=True)
+                if text and text[0].isalpha() and ' ' not in text and len(text) <= 20:
+                    names.append(text)
+
+    
+   # print(names)
+else:
+    print(f"Failed to retrieve the page. Status code: {response.status_code}")
+    #just incase it doesent work
+
+
+
+def remove_special_chars_and_digits(input_list):
+   
+    pattern = re.compile(r'[^\w\s]', re.UNICODE)  
+    digit_pattern = re.compile(r'\d')  
+
+   
+    filtered_list = [item for item in input_list if not pattern.search(item) and not digit_pattern.search(item)]
+
+    return filtered_list
+
+
+if __name__ == "__main__":
+    
+    example_list = names
+
+   
+    cleaned_list = remove_special_chars_and_digits(example_list)
+
+    print("Filtered list:", cleaned_list)
