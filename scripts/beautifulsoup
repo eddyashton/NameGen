@@ -25,7 +25,7 @@ if response.status_code == 200:
                     names.append(text)
 
     
-   # print(names)
+ #   print(names)
 else:
     print(f"Failed to retrieve the page. Status code: {response.status_code}")
     #just incase it doesent work
@@ -38,7 +38,7 @@ def remove_special_chars_and_digits(input_list):
     digit_pattern = re.compile(r'\d')  
 
    
-    filtered_list = [item for item in input_list if not pattern.search(item) and not digit_pattern.search(item)]
+    filtered_list = [item for item in input_list if not pattern.search(item) and not digit_pattern.search(item)and item. isascii()]
 
     return filtered_list
 
@@ -49,5 +49,5 @@ if __name__ == "__main__":
 
    
     cleaned_list = remove_special_chars_and_digits(example_list)
-
+    cleaned_list = sorted(set(cleaned_list))
     print("Filtered list:", cleaned_list)
