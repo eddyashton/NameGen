@@ -32,7 +32,7 @@ def divide_string_into_three_parts(message):
 def load_from_file(adjective):
     with open(adjective, 'r') as folder:
         lines = folder.readlines()
-    lines = [lines.strip() for line in lines]
+    lines = [lines.strip() for lines in lines]
     return lines
 
 
@@ -111,7 +111,7 @@ def weighted_random_choice(probability):
     return random.choices(keys, weights=values, k=1)[0]
 
 
-def gen_string(all_probabilities, seed, token_splitter):
+def gen_string(all_probabilities, seed):
     random.seed(seed)
     l = []
     while True:
@@ -120,7 +120,7 @@ def gen_string(all_probabilities, seed, token_splitter):
         c = weighted_random_choice(probabilities)
         l += [c]
         if c == "":
-            return (token_splitter or "").join(l)
+            return ("").join(l)
 
 
 if __name__ == "__main__":
@@ -139,14 +139,24 @@ if __name__ == "__main__":
     
     seed1, seed2, seed3 = divide_string_into_three_parts(args.seed[0])
 
-    strings_list = load_from_file(adjective)
-    tokens = find_tokens(strings_list, seed1.token_splitter)
+    strings_list = load_from_file("data/adjective")
+    tokens = find_tokens(strings_list, seed1)
     # TODO: Remove empty string, to avoid infinite loops in tokeniser?
     token_probabilities = count_tokens(strings_list, tokens)
 
-    for inner_seed in seed1.seed:
-        s = gen_string(token_probabilities, seed1, seed1.token_splitter)
-        s = s[0].upper() + s[1:]
-        print(s)
+    
+s = gen_string(token_probabilities, seed1)
+s = s[0].upper() + s[1:]
+a = gen_string(token_probabilities, seed2)
+a = a[0].upper() + a[1:]
 
-#problem with the order of infos which makes it not solvable
+strings_list = load_from_file("data/animal")
+tokens = find_tokens(strings_list, seed3)
+# TODO: Remove empty string, to avoid infinite loops in tokeniser?
+token_probabilities = count_tokens(strings_list, tokens)
+
+
+b = gen_string(token_probabilities, seed3)
+b = b[0].upper() + b[1:]
+print (s + a +b)
+
