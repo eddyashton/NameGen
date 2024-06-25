@@ -1,0 +1,163 @@
+
+import sys
+import argparse 
+import random
+from collections import Counter 
+
+def divide_string_into_three_parts(message):
+    length = len(message)
+    part_length = length // 3
+
+    if length % 3 == 0:
+        part1_length = part_length
+        part2_length = part_length
+        part3_length = part_length
+    elif length % 3 == 1:
+        part1_length = part_length + 1
+        part2_length = part_length
+        part3_length = part_length
+    else:  # length % 3 == 2
+        part1_length = part_length + 1
+        part2_length = part_length + 1
+        part3_length = part_length
+
+    part1 = message[:part1_length]
+    part2 = message[part1_length:part1_length + part2_length]
+    part3 = message[part1_length + part2_length:]
+
+    return part1, part2, part3
+
+
+
+def load_from_file(adjective):
+    with open(adjective) as folder:
+        lines = folder.readlines()
+    lines = [line.strip() for line in lines]
+    return lines
+
+
+def count_ngrams(s, n):
+    counts = {}
+    for ngram in [s[i : i + n] for i in range(0, len(s) - n + 1)]:
+        if ngram in counts:
+            counts[ngram] += 1
+        else:
+            counts[ngram] = 1
+    return counts
+
+
+def find_tokens(strings_list, token_splitter):
+    token_counts = {}
+    for line in strings_list:
+        line = line.lower()
+        local_tokens = {}
+        if token_splitter is not None:
+            local_tokens.update(
+                dict(Counter([word.lower() for word in line.split(token_splitter)]))
+            )
+            # TODO: count_ngrams for word-based splitting?
+        else:
+            local_tokens.update(dict(Counter(line)))
+            local_tokens.update(count_ngrams(line, 2))
+            local_tokens.update(count_ngrams(line, 3))
+            local_tokens.update(count_ngrams(line, 4))
+            local_tokens.update(count_ngrams(line, 5))
+        for k, v in local_tokens.items():
+            if k in token_counts:
+                token_counts[k] += v
+            else:
+                token_counts[k] = v
+    best_tokens = sorted(
+        token_counts.items(), key=lambda p: len(p[0]) == 1 or p[1], reverse=True
+    )[:100]
+    # TODO: Configure number of tokens kept, for differently sized data sets?
+    return [bt[0] for bt in best_tokens]
+
+
+def tokenisations(s, tokens):
+    # TODO: More efficient tokenisation process?
+    l = []
+    for t in tokens:
+        if s.startswith(t):
+            remainder = s[len(t) :]
+            rest = tokenisations(remainder, tokens)
+            if len(rest) == 0:
+                l += [[t]]
+            else:
+                l += [[t, *r] for r in rest]
+    return l
+
+
+def count_tokens(strings_list, tokens):
+    token_probabilities = {}
+
+    for string in strings_list:
+        seqs = tokenisations(string.lower(), tokens)
+        for seq in seqs:
+            for first, second in zip([""] + seq, seq + [""]):
+                if first not in token_probabilities:
+                    token_probabilities[first] = {}
+                first_counts = token_probabilities[first]
+                if second not in first_counts:
+                    first_counts[second] = 0
+                first_counts[second] += 1
+
+    return token_probabilities
+
+
+def weighted_random_choice(probability):
+    keys = list(probability.keys())
+    values = list(probability.values())
+    return random.choices(keys, weights=values, k=1)[0]
+
+
+def gen_string(all_probabilities, seed, token_splitter):
+    random.seed(seed)
+    l = []
+    while True:
+        c = len(l) > 0 and l[-1] or ""
+        probabilities = all_probabilities[c]
+        c = weighted_random_choice(probabilities)
+        l += [c]
+        if c == "":
+            return (token_splitter or "").join(l)
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(
+        description="simplify a text making it readable but keeping all info"
+    )
+    #parser.add_argument(
+    #    "file",
+    #    help="check if you have animal and adjective file if not, change you data file names",
+    #)
+    parser.add_argument("seed", nargs="+")
+    parser.add_argument("--token-splitter", default=None)
+    # TODO: 2 token splitter modes (char vs word), rather than arbitrary character?
+
+
+    strings_list = load_from_file(seed1.file)
+    tokens = find_tokens(strings_list, seed1.token_splitter)
+    # TODO: Remove empty string, to avoid infinite loops in tokeniser?
+    token_probabilities = count_tokens(strings_list, tokens)
+
+    for seed1 in seed1.seed:
+        s = gen_string(token_probabilities, seed1, seed1.token_splitter)
+        s = s[0].upper() + s[1:]
+        print(s)
+
+message = parser.parse_args()
+result = divide_string_into_three_parts(message)
+
+if isinstance(result, tuple):
+    
+      print("dividing successfull")
+else:
+    print(result)
+
+seed1 = result[0]
+seed2 = result[1]
+seed3 = result[2]
+
+#problem with the order of infos which makes it not solvable
