@@ -30,9 +30,9 @@ def divide_string_into_three_parts(message):
 
 
 def load_from_file(adjective):
-    with open(adjective) as folder:
+    with open(adjective, 'r') as folder:
         lines = folder.readlines()
-    lines = [line.strip() for line in lines]
+    lines = [lines.strip() for line in lines]
     return lines
 
 
@@ -135,10 +135,11 @@ if __name__ == "__main__":
     parser.add_argument("seed", nargs="+")
     parser.add_argument("--token-splitter", default=None)
     # TODO: 2 token splitter modes (char vs word), rather than arbitrary character?
-    message = parser.parse_args()
-    seed1, seed2, seed3 = divide_string_into_three_parts(message)
+    args = parser.parse_args()
+    
+    seed1, seed2, seed3 = divide_string_into_three_parts(args.seed[0])
 
-    strings_list = load_from_file(seed1.file)
+    strings_list = load_from_file(adjective)
     tokens = find_tokens(strings_list, seed1.token_splitter)
     # TODO: Remove empty string, to avoid infinite loops in tokeniser?
     token_probabilities = count_tokens(strings_list, tokens)
