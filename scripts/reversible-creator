@@ -135,29 +135,17 @@ if __name__ == "__main__":
     parser.add_argument("seed", nargs="+")
     parser.add_argument("--token-splitter", default=None)
     # TODO: 2 token splitter modes (char vs word), rather than arbitrary character?
-
+    message = parser.parse_args()
+    seed1, seed2, seed3 = divide_string_into_three_parts(message)
 
     strings_list = load_from_file(seed1.file)
     tokens = find_tokens(strings_list, seed1.token_splitter)
     # TODO: Remove empty string, to avoid infinite loops in tokeniser?
     token_probabilities = count_tokens(strings_list, tokens)
 
-    for seed1 in seed1.seed:
+    for inner_seed in seed1.seed:
         s = gen_string(token_probabilities, seed1, seed1.token_splitter)
         s = s[0].upper() + s[1:]
         print(s)
-
-message = parser.parse_args()
-result = divide_string_into_three_parts(message)
-
-if isinstance(result, tuple):
-    
-      print("dividing successfull")
-else:
-    print(result)
-
-seed1 = result[0]
-seed2 = result[1]
-seed3 = result[2]
 
 #problem with the order of infos which makes it not solvable
