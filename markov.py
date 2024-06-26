@@ -13,6 +13,10 @@ def load_from_file(filename):
     return lines
 
 
+def ngrams(s, n):
+    return zip(*[s[i : len(s) + n - i] for i in range(n)])
+
+
 def count_ngrams(s, n):
     counts = {}
     for ngram in [s[i : i + n] for i in range(0, len(s) - n + 1)]:
@@ -112,6 +116,7 @@ class Markov:
         s = gen_string(self.token_probabilities, seed, self.token_splitter)
         s = s[0].upper() + s[1:]
         return s
+
 
 if __name__ == "__main__":
 
