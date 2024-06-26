@@ -19,13 +19,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    name_generator = Combinator(data_dir="data", template="{firstname} {surname}") if args.kind == "combinator" else Markov(file="data/name")
+    name_generator = Combinator(data_dir="data", template="{firstname}-{surname}") if args.kind == "combinator" else Markov(file="data/name")
 
     pattern = re.compile(r"[0-9a-fA-F]{8,}")
     input_lines = load_from_file(args.file)
     for line in input_lines:
         matches = pattern.findall(line)
-        for match in matches:
+        for match in set(matches):
             replacement = name_generator.generate(match)
             line = line.replace(match, replacement)
         print(line)

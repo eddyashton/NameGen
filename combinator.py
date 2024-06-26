@@ -21,16 +21,21 @@ def do_hash(I):
 def lookup(l, n):
     return l[n % len(l)]
 
+def make_hasher_lookup(vals):
+    def hasher_lookup(seed, i):
+        n = do_hash(seed + str(i))
+        choice = lookup(vals, n)
+        return choice
+    return hasher_lookup
 
 def populate_template(identifier, template_s, data):
-    n = 0
+    i = 0
     s = template_s
     for k, v in data.items():
         while k in s:
-            n = do_hash(identifier + str(n))
-            choice = lookup(v, n)
+            choice = v(identifier,i)
             s = s.replace(k, choice, 1)
-            n += 1
+            i += 1
 
     return s
 
@@ -40,13 +45,15 @@ def load_data(dir):
     files = os.listdir(dir)
     for file in files:
         path = os.path.join(dir, file)
-        data[f"{{{file}}}"] = load_from_file(path)
+        data[f"{{{file}}}"] = make_hasher_lookup(load_from_file(path))
 
+    data["{original}"] = lambda seed, _: seed
     return data
 
 class Combinator:
     def __init__(self, data_dir, template):
         self.data = load_data(data_dir)
+        
         self.template = template
 
     def generate(self, seed):
