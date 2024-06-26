@@ -87,13 +87,6 @@ def print_measure_info(data_dir, template):
             f" - {entropy} bits of entropy (eg: {bin_0:0{entropy}b}, {bin_1:0{entropy}b})"
         )
 
-        octal = math.floor(math.log(output_size, 8))
-        if octal == 0:
-            return
-        b_0 = " ".join(f"{n:02x}" for n in os.urandom(octal))
-        b_1 = " ".join(f"{n:02x}" for n in os.urandom(octal))
-        print(f" - {octal} bytes of data (eg: {b_0}, {b_1})")
-
         dec_chars = [str(n) for n in range(10)]
         assert len(dec_chars) == 10
 
@@ -118,6 +111,13 @@ def print_measure_info(data_dir, template):
             ex_1 = "".join(random.choices(characters, k=n))
             prefix = prefix.format(n=n)
             print(f" - {prefix} (eg: {ex_0}, {ex_1})")
+
+        bs = math.floor(math.log(output_size, 256))
+        if bs == 0:
+            return
+        b_0 = " ".join(f"{n:02x}" for n in os.urandom(bs))
+        b_1 = " ".join(f"{n:02x}" for n in os.urandom(bs))
+        print(f" - {bs} bytes of data (eg: {b_0}, {b_1})")
 
 
 class Combinator:
