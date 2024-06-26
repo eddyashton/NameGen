@@ -101,7 +101,7 @@ def gen_string(all_probabilities, seed, token_splitter):
 
 
 class Markov:
-    def __init__(self, file, token_splitter):
+    def __init__(self, file, token_splitter=None):
         strings_list = load_from_file(file)
         tokens = find_tokens(strings_list, token_splitter)
         # TODO: Remove empty string, to avoid infinite loops in tokeniser?
@@ -109,7 +109,9 @@ class Markov:
         self.token_splitter = token_splitter
 
     def generate(self, seed):
-        return gen_string(self.token_probabilities, seed, self.token_splitter)
+        s = gen_string(self.token_probabilities, seed, self.token_splitter)
+        s = s[0].upper() + s[1:]
+        return s
 
 if __name__ == "__main__":
 
@@ -130,5 +132,4 @@ if __name__ == "__main__":
 
     for seed in args.seed:
         s = markov.generate(seed)
-        s = s[0].upper() + s[1:]
         print(s)
