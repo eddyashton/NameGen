@@ -44,6 +44,13 @@ def load_data(dir):
 
     return data
 
+class Combinator:
+    def __init__(self, data_dir, template):
+        self.data = load_data(data_dir)
+        self.template = template
+
+    def generate(self, seed):
+        return populate_template(seed, self.template, self.data)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -52,7 +59,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--data-dir",
-        default="namelist",
+        default="data",
         help="Path to directory where namelists are stored",
     )
     parser.add_argument(
@@ -68,13 +75,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    data = load_data(args.data_dir)
+    combinator = Combinator(args.data_dir, args.template)
 
     for identifier in args.identifier:
         print(
-            populate_template(
-                identifier,
-                args.template,
-                data,
-            )
+            combinator.generate(identifier)
         )
