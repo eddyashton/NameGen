@@ -72,7 +72,7 @@ def print_measure_info(data_dir, template):
             print(
                 f" - {k} file provides {v:,} unique values (and appears {template.count(k)} time(s))"
             )
-            output_size *= v * template.count(k)
+            output_size *= v ** template.count(k)
 
     print(f"=> {output_size:,} unique values")
 
