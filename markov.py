@@ -100,6 +100,17 @@ def gen_string(all_probabilities, seed, token_splitter):
             return (token_splitter or "").join(l)
 
 
+class Markov:
+    def __init__(self, file, token_splitter):
+        strings_list = load_from_file(file)
+        tokens = find_tokens(strings_list, token_splitter)
+        # TODO: Remove empty string, to avoid infinite loops in tokeniser?
+        self.token_probabilities = count_tokens(strings_list, tokens)
+        self.token_splitter = token_splitter
+
+    def generate(self, seed):
+        return gen_string(self.token_probabilities, seed, self.token_splitter)
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
@@ -115,12 +126,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    strings_list = load_from_file(args.file)
-    tokens = find_tokens(strings_list, args.token_splitter)
-    # TODO: Remove empty string, to avoid infinite loops in tokeniser?
-    token_probabilities = count_tokens(strings_list, tokens)
+    markov = Markov(args.file, args.token_splitter)
 
     for seed in args.seed:
-        s = gen_string(token_probabilities, seed, args.token_splitter)
+        s = markov.generate(seed)
         s = s[0].upper() + s[1:]
         print(s)
