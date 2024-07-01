@@ -52,7 +52,7 @@ def count_tokens(strings_list, tokens):
     token_probabilities = {}
 
     for string in strings_list:
-        seqs = tokenisations(string.lower(), tokens)
+        seqs = tokenisations(string, tokens)
         for seq in seqs:
             for first, second in zip([""] + seq, seq + [""]):
                 if first not in token_probabilities:
@@ -93,7 +93,6 @@ class Markov:
 
     def generate(self, seed):
         s = gen_string(self.token_probabilities, seed)
-        s = s[0].upper() + s[1:]
         return s
 
 
