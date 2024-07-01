@@ -4,6 +4,7 @@ from collections import Counter
 import random
 import argparse
 import pickle
+import datetime
 
 
 def load_from_file(filename):
@@ -36,7 +37,7 @@ def find_tokens(text):
 def tokenisations(s, tokens):
     # TODO: More efficient tokenisation process?
     l = []
-    for ngram_size in range(1, MAX_NGRAM_LEN + 1):
+    for ngram_size in range(MAX_NGRAM_LEN, 0, -1):
         prefix = s[:ngram_size]
         if prefix in tokens:
             remainder = s[ngram_size:]
@@ -45,6 +46,8 @@ def tokenisations(s, tokens):
                 l += [[prefix]]
             else:
                 l += [[prefix, *r] for r in rest]
+            # Don't look for shorter tokens that are a prefix of this!
+            break
     return l
 
 
