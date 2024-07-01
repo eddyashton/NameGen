@@ -30,20 +30,21 @@ def find_tokens(text):
         token_counts.update(ngrams(text, ngram_size))
     best_tokens = sorted(token_counts.items(), key=lambda p: p[1], reverse=True)[:1000]
     # TODO: Configure number of tokens kept, for differently sized data sets?
-    return [bt[0] for bt in best_tokens]
+    return set(bt[0] for bt in best_tokens)
 
 
 def tokenisations(s, tokens):
     # TODO: More efficient tokenisation process?
     l = []
-    for t in tokens:
-        if s.startswith(t):
-            remainder = s[len(t) :]
+    for ngram_size in range(1, MAX_NGRAM_LEN + 1):
+        prefix = s[:ngram_size]
+        if prefix in tokens:
+            remainder = s[ngram_size:]
             rest = tokenisations(remainder, tokens)
             if len(rest) == 0:
-                l += [[t]]
+                l += [[prefix]]
             else:
-                l += [[t, *r] for r in rest]
+                l += [[prefix, *r] for r in rest]
     return l
 
 
