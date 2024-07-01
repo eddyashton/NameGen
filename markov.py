@@ -29,6 +29,10 @@ def find_tokens(text):
     token_counts = Counter()
     for ngram_size in range(1, MAX_NGRAM_LEN + 1):
         token_counts.update(ngrams(text, ngram_size))
+    # Delete any tokens with internal newlines
+    token_counts = {
+        k: v for k, v in dict(token_counts).items() if k.find("\n") in (-1, len(k) - 1)
+    }
     best_tokens = sorted(token_counts.items(), key=lambda p: p[1], reverse=True)[:1000]
     # TODO: Configure number of tokens kept, for differently sized data sets?
     return set(bt[0] for bt in best_tokens)
@@ -57,7 +61,7 @@ def count_tokens(strings_list, tokens):
     for string in strings_list:
         seqs = tokenisations(string, tokens)
         for seq in seqs:
-            for first, second in zip([""] + seq, seq + [""]):
+            for first, second in zip(["\n"] + seq, seq + ["\n"]):
                 if first not in token_probabilities:
                     token_probabilities[first] = {}
                 first_counts = token_probabilities[first]
@@ -78,12 +82,12 @@ def gen_string(all_probabilities, seed):
     random.seed(seed)
     l = []
     while True:
-        c = len(l) > 0 and l[-1] or ""
+        c = len(l) > 0 and l[-1] or "\n"
         probabilities = all_probabilities[c]
         c = weighted_random_choice(probabilities)
         l += [c]
-        if c == "":
-            return "".join(l)
+        if c.endswith("\n"):
+            return "".join(l[:-1])
 
 
 class Markov:
@@ -92,7 +96,7 @@ class Markov:
             text = f.read()
         tokens = find_tokens(text)
         # TODO: Remove empty string, to avoid infinite loops in tokeniser?
-        self.token_probabilities = count_tokens(text.splitlines(), tokens)
+        self.token_probabilities = count_tokens(text.splitlines(keepends=True), tokens)
 
     def generate(self, seed):
         s = gen_string(self.token_probabilities, seed)
