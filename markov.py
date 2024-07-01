@@ -24,15 +24,11 @@ def ngrams(s, n):
 MAX_NGRAM_LEN = 5
 
 
-def find_tokens(strings_list):
+def find_tokens(text):
     token_counts = Counter()
-    for line in strings_list:
-        line = line.lower()
-        for ngram_size in range(1, MAX_NGRAM_LEN + 1):
-            token_counts.update(ngrams(line, ngram_size))
-    best_tokens = sorted(
-        token_counts.items(), key=lambda p: len(p[0]) == 1 or p[1], reverse=True
-    )[:100]
+    for ngram_size in range(1, MAX_NGRAM_LEN + 1):
+        token_counts.update(ngrams(text, ngram_size))
+    best_tokens = sorted(token_counts.items(), key=lambda p: p[1], reverse=True)[:1000]
     # TODO: Configure number of tokens kept, for differently sized data sets?
     return [bt[0] for bt in best_tokens]
 
@@ -88,10 +84,11 @@ def gen_string(all_probabilities, seed):
 
 class Markov:
     def __init__(self, file):
-        strings_list = load_from_file(file)
-        tokens = find_tokens(strings_list)
+        with open(file) as f:
+            text = f.read()
+        tokens = find_tokens(text)
         # TODO: Remove empty string, to avoid infinite loops in tokeniser?
-        self.token_probabilities = count_tokens(strings_list, tokens)
+        self.token_probabilities = count_tokens(text.splitlines(), tokens)
 
     def generate(self, seed):
         s = gen_string(self.token_probabilities, seed)
