@@ -24,19 +24,12 @@ def ngrams(s, n):
 MAX_NGRAM_LEN = 5
 
 
-def find_tokens(strings_list, token_splitter):
+def find_tokens(strings_list):
     token_counts = Counter()
     for line in strings_list:
         line = line.lower()
-        local_tokens = {}
-        if token_splitter is not None:
-            local_tokens.update(
-                dict(Counter([word.lower() for word in line.split(token_splitter)]))
-            )
-            # TODO: count_ngrams for word-based splitting?
-        else:
-            for ngram_size in range(1, MAX_NGRAM_LEN + 1):
-                token_counts.update(ngrams(line, ngram_size))
+        for ngram_size in range(1, MAX_NGRAM_LEN + 1):
+            token_counts.update(ngrams(line, ngram_size))
     best_tokens = sorted(
         token_counts.items(), key=lambda p: len(p[0]) == 1 or p[1], reverse=True
     )[:100]
@@ -81,7 +74,7 @@ def weighted_random_choice(probability):
     return random.choices(keys, weights=values, k=1)[0]
 
 
-def gen_string(all_probabilities, seed, token_splitter):
+def gen_string(all_probabilities, seed):
     random.seed(seed)
     l = []
     while True:
@@ -90,19 +83,18 @@ def gen_string(all_probabilities, seed, token_splitter):
         c = weighted_random_choice(probabilities)
         l += [c]
         if c == "":
-            return (token_splitter or "").join(l)
+            return "".join(l)
 
 
 class Markov:
-    def __init__(self, file, token_splitter=None):
+    def __init__(self, file):
         strings_list = load_from_file(file)
-        tokens = find_tokens(strings_list, token_splitter)
+        tokens = find_tokens(strings_list)
         # TODO: Remove empty string, to avoid infinite loops in tokeniser?
         self.token_probabilities = count_tokens(strings_list, tokens)
-        self.token_splitter = token_splitter
 
     def generate(self, seed):
-        s = gen_string(self.token_probabilities, seed, self.token_splitter)
+        s = gen_string(self.token_probabilities, seed)
         s = s[0].upper() + s[1:]
         return s
 
@@ -117,12 +109,10 @@ if __name__ == "__main__":
         help="name of the file you want to use as data",
     )
     parser.add_argument("seed", nargs="+")
-    parser.add_argument("--token-splitter", default=None)
-    # TODO: 2 token splitter modes (char vs word), rather than arbitrary character?
 
     args = parser.parse_args()
 
-    markov = Markov(args.file, args.token_splitter)
+    markov = Markov(args.file)
 
     for seed in args.seed:
         s = markov.generate(seed)
