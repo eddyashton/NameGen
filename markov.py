@@ -14,21 +14,18 @@ def load_from_file(filename):
 
 
 def ngrams(s, n):
-    return zip(*[s[i : len(s) + n - i] for i in range(n)])
+    if n == 1:
+        return s
+
+    for i in range(0, len(s) - n + 1):
+        yield s[i : i + n]
 
 
-def count_ngrams(s, n):
-    counts = {}
-    for ngram in [s[i : i + n] for i in range(0, len(s) - n + 1)]:
-        if ngram in counts:
-            counts[ngram] += 1
-        else:
-            counts[ngram] = 1
-    return counts
+MAX_NGRAM_LEN = 5
 
 
 def find_tokens(strings_list, token_splitter):
-    token_counts = {}
+    token_counts = Counter()
     for line in strings_list:
         line = line.lower()
         local_tokens = {}
@@ -38,16 +35,8 @@ def find_tokens(strings_list, token_splitter):
             )
             # TODO: count_ngrams for word-based splitting?
         else:
-            local_tokens.update(dict(Counter(line)))
-            local_tokens.update(count_ngrams(line, 2))
-            local_tokens.update(count_ngrams(line, 3))
-            local_tokens.update(count_ngrams(line, 4))
-            local_tokens.update(count_ngrams(line, 5))
-        for k, v in local_tokens.items():
-            if k in token_counts:
-                token_counts[k] += v
-            else:
-                token_counts[k] = v
+            for ngram_size in range(1, MAX_NGRAM_LEN + 1):
+                token_counts.update(ngrams(line, ngram_size))
     best_tokens = sorted(
         token_counts.items(), key=lambda p: len(p[0]) == 1 or p[1], reverse=True
     )[:100]
