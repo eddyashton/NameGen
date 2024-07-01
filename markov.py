@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import sys
 from collections import Counter
 import random
 import argparse
+import pickle
 
 
 def load_from_file(filename):
@@ -100,17 +100,35 @@ class Markov:
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description="create a readable name using a marok chain"
+        description="Create a readable name using a markov chain"
     )
     parser.add_argument(
         "file",
-        help="name of the file you want to use as data",
+        help="Path to the file you want to use as source data",
     )
-    parser.add_argument("seed", nargs="+")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "--store-probabilities",
+        help="Path to file where calculated probabilities should be stored",
+        type=str,
+    )
+    group.add_argument(
+        "--load-probabilities",
+        help="Input path is pre-calculated probabilities, rather than raw source data",
+        action="store_true",
+    )
+    parser.add_argument("seed", nargs="*")
 
     args = parser.parse_args()
 
-    markov = Markov(args.file)
+    if args.load_probabilities:
+        with open(args.file, "rb") as f:
+            markov = pickle.load(f)
+    else:
+        markov = Markov(args.file)
+        if args.store_probabilities:
+            with open(args.store_probabilities, "wb") as f:
+                pickle.dump(markov, f)
 
     for seed in args.seed:
         s = markov.generate(seed)
